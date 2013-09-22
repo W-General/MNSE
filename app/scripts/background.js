@@ -1,8 +1,53 @@
 'use strict';
-
 var timeToken;
-//var result;
 var accToken;
+var known_words = {}
+// read in high school word list
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function(){
+    if (xhr.readyState != 4)
+        return;
+    var w = JSON.parse(xhr.responseText);
+    for (var i in w.words) {
+      //console.log(w.words[i]);
+      known_words[stemmer(w.words[i])] = 1;
+    }
+    //  console.log(known_words);
+}
+xhr.open("GET", chrome.extension.getURL('/words/highschool.json'), true);
+xhr.send();
+
+
+// read in 4 level word list
+xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function(){
+    if (xhr.readyState != 4)
+        return;
+    var w = JSON.parse(xhr.responseText);
+    for (var i in w.words) {
+      //console.log(w.words[i]);
+      known_words[stemmer(w.words[i])] = 1;
+    }
+    //  console.log(known_words);
+}
+xhr.open("GET", chrome.extension.getURL('/words/4level.json'), true);
+xhr.send();
+
+
+
+//see if it's english word
+function is_english(word) {
+  for (var i = 0; i < word.length; i ++) {
+    if ((word[i] >= 'a' && word[i] <= 'z') ||
+      (word[i] >= 'a' && word[i] <= 'z')) {
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
+//communication
 
 chrome.runtime.onInstalled.addListener(function (details) {
     console.log('previousVersion', details.previousVersion);
@@ -56,9 +101,9 @@ function translate(text, callback) {
 				}
 			}
 			xhr.send();
+
 		}
 	);
-	
 }
 
 function breakup(request, callback) {
@@ -67,13 +112,21 @@ function breakup(request, callback) {
 	var accum = 0;
 	for(var i=0; i < words.length;i++){
 		(function(i){
-			translate(words[i], function(translated){
-			words[i] = translated;
-			accum = accum+i+1;
-			if(accum == sum) {
-				callback(words.join(" "));
+			if (is_english(words[i]) && !known_words[stemmer(words[i])]) {
+				translate(words[i], function(translated){
+				words[i] = words[i] + "(" + translated + ")";
+				accum = accum+i+1;
+				if(accum == sum) {
+					callback(words);
+				}
+				});	
+			} else {
+				accum = accum+i+1;
+				if(accum == sum) {
+					callback(words);
+				}
 			}
-			});	
+
 		})(i);
 	}
 }
@@ -82,9 +135,10 @@ function breakup(request, callback) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
   	breakup(request, function(words){
-  		console.log(words);
-  		sendResponse({text: words});
+  		sendResponse({text: words.join(" ")});
   	});
   	return true;
   }
 );
+
+
