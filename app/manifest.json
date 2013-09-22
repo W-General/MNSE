@@ -27,7 +27,8 @@
     {
       "matches": [
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "file://*"
       ],
       "css": [
         "styles/main.css"
@@ -43,6 +44,7 @@
   "permissions": [
     "tabs",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "file://*"
   ]
 }
