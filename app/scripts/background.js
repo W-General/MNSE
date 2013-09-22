@@ -44,6 +44,8 @@ function is_english(word) {
       return false;
     }
   }
+  if (word.length <= 5)
+    return false;
   return true;
 }
 
@@ -119,7 +121,7 @@ function breakup(request, callback) {
 				if(accum == sum) {
 					callback(words);
 				}
-				});	
+				});
 			} else {
 				accum = accum+i+1;
 				if(accum == sum) {
