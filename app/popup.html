@@ -1,12 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <link href="styles/main.css" rel="stylesheet">
-        <!-- build:js scripts/popup.js -->
-        <script src="scripts/popup.js"></script>
-        <!-- endbuild -->
-    </head>
-    <body>
-        <!-- CHROME EXTENSION POPUP -->
-    </body>
+  <head>
+    <title>Popup</title>
+    <link href="popup.css" rel="stylesheet">
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <h3>MNSE Reading Helper</h3>
+    <div role="main">
+      <form>
+        <label for="timeframe">English Level</label>
+        <select id="timeframe">
+          <option value="hs">High School</option>
+          <option value="college">College</option>
+        </select>
+        <button id="button">Magic!!!</button>
+      </form>
+    </div>
+  </body>
 </html>

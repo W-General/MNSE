@@ -19,19 +19,19 @@ xhr.send();
 
 
 // read in 4 level word list
-xhr = new XMLHttpRequest();
-xhr.onreadystatechange = function(){
-    if (xhr.readyState != 4)
+var xhr2 = new XMLHttpRequest();
+xhr2.onreadystatechange = function(){
+    if (xhr2.readyState != 4)
         return;
-    var w = JSON.parse(xhr.responseText);
+    var w = JSON.parse(xhr2.responseText);
     for (var i in w.words) {
       //console.log(w.words[i]);
       known_words[stemmer(w.words[i])] = 1;
     }
     //  console.log(known_words);
 }
-xhr.open("GET", chrome.extension.getURL('/words/4level.json'), true);
-xhr.send();
+xhr2.open("GET", chrome.extension.getURL('/words/4level.json'), true);
+xhr2.send();
 
 
 
