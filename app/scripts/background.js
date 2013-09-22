@@ -7,17 +7,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 
-
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse){
-		var result;
-		getToken(request);
-		console.log(result);
-		//sendResponse(result);
-	}
-);
-
-
 function getToken(text) {
 	var timeNow = new Date();
 	if (timeNow-timeToken > 600000) {
@@ -60,3 +49,18 @@ function translate(text, token) {
 	}
 	xhr.send();
 }
+
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+  	var result;
+	
+  	var words = request.text.split(" ");
+  	for (var i = 0; i < words.length; i++) {
+  		getToken(request);
+  		//words[i] = "!" + words[i];
+  	}
+  	console.log(words.join(" "));
+    sendResponse({text: words.join(" ")});
+  }
+);

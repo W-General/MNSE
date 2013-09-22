@@ -10,6 +10,7 @@
     "default_locale": "en",
     "background": {
         "scripts": [
+            "scripts/stemmer.js",
             "scripts/background.js"
         ]
     },
@@ -32,6 +33,7 @@
         "styles/main.css"
       ],
       "js": [
+        "scripts/jquery.min.js",
         "scripts/contentscript.js"
       ],
       "run_at": "document_end",
