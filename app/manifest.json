@@ -10,6 +10,7 @@
     "default_locale": "en",
     "background": {
         "scripts": [
+            "scripts/stemmer.js",
             "scripts/background.js"
         ]
     },

@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(
   	//console.log(request.text);
   	var words = request.text.split(" ");
   	for (var i = 0; i < words.length; i++) {
-  		words[i] = "!" + words[i];
+  		//words[i] = "!" + words[i];
   	}
   	console.log(words.join(" "));
     sendResponse({text: words.join(" ")});
