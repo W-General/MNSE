@@ -2,6 +2,12 @@
 var timeToken;
 var accToken;
 var known_words = {}
+var known_words_college = {}
+
+var difficulty = false;
+var language = "zh-TW";
+
+
 // read in high school word list
 var xhr = new XMLHttpRequest();
 xhr.onreadystatechange = function(){
@@ -9,12 +15,11 @@ xhr.onreadystatechange = function(){
         return;
     var w = JSON.parse(xhr.responseText);
     for (var i in w.words) {
-      //console.log(w.words[i]);
       known_words[stemmer(w.words[i])] = 1;
     }
-    //  console.log(known_words);
 }
 xhr.open("GET", chrome.extension.getURL('/words/highschool.json'), true);
+
 xhr.send();
 
 
@@ -25,10 +30,8 @@ xhr2.onreadystatechange = function(){
         return;
     var w = JSON.parse(xhr2.responseText);
     for (var i in w.words) {
-      //console.log(w.words[i]);
-      known_words[stemmer(w.words[i])] = 1;
+      known_words_college[stemmer(w.words[i])] = 1;
     }
-    //  console.log(known_words);
 }
 xhr2.open("GET", chrome.extension.getURL('/words/4level.json'), true);
 xhr2.send();
@@ -88,8 +91,9 @@ function getToken(callback) {
 
 function translate(text, callback) {
 	getToken(function(token){
-			var from = "en", to = "zh-TW";
-			var request = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + encodeURIComponent(text) + "&from=" + from + "&to=" + to;
+			var from = "en";
+			console.log(language);
+			var request = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + encodeURIComponent(text) + "&from=" + from + "&to=" + language;
 			var authToken = "Bearer " + token;
 			var xhr = new XMLHttpRequest();
 			xhr.open("GET", request, true);
@@ -114,7 +118,10 @@ function breakup(request, callback) {
 	var accum = 0;
 	for(var i=0; i < words.length;i++){
 		(function(i){
-			if (is_english(words[i]) && !known_words[stemmer(words[i])]) {
+			if (is_english(words[i]) && !known_words[stemmer(words[i])]
+				&& ((difficulty && !known_words_college[stemmer(words[i])]) || !difficulty)
+				) {
+				console.log(difficulty);
 				translate(words[i], function(translated){
 				words[i] = words[i] + "(" + translated + ")";
 				accum = accum+i+1;
@@ -136,10 +143,27 @@ function breakup(request, callback) {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
+  	if(request.type == "difficulty") {
+  		if (request.value == "college") {
+  			difficulty = true;
+  		}
+  		else {
+  			difficulty = false;
+  		}
+  		console.log(request.lang);
+  		language = request.lang;
+  		chrome.tabs.getSelected(null, function(tab) {
+  			var code = 'window.location.reload();';
+  			chrome.tabs.executeScript(tab.id, {code: code});
+		});
+  	} 
+  	else {
   	breakup(request, function(words){
   		sendResponse({text: words.join(" ")});
+
   	});
   	return true;
+  	}
   }
 );
 
