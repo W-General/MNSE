@@ -92,7 +92,6 @@ function getToken(callback) {
 function translate(text, callback) {
 	getToken(function(token){
 			var from = "en";
-			console.log(language);
 			var request = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text=" + encodeURIComponent(text) + "&from=" + from + "&to=" + language;
 			var authToken = "Bearer " + token;
 			var xhr = new XMLHttpRequest();
@@ -121,7 +120,6 @@ function breakup(request, callback) {
 			if (is_english(words[i]) && !known_words[stemmer(words[i])]
 				&& ((difficulty && !known_words_college[stemmer(words[i])]) || !difficulty)
 				) {
-				console.log(difficulty);
 				translate(words[i], function(translated){
 				words[i] = words[i] + "(" + translated + ")";
 				accum = accum+i+1;
@@ -150,7 +148,6 @@ chrome.runtime.onMessage.addListener(
   		else {
   			difficulty = false;
   		}
-  		console.log(request.lang);
   		language = request.lang;
   		chrome.tabs.getSelected(null, function(tab) {
   			var code = 'window.location.reload();';
