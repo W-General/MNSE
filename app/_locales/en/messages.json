@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "We-No-Speek-Engrish",
+    "message": "Babel",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Translation Help Extension",
+    "message": "Customized Translation for Better Reading",
     "description": "The description of the application"
   }
 }

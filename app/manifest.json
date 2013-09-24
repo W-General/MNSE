@@ -19,7 +19,7 @@
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
     },
-    "default_title": "We-No-Speek-Engrish",
+    "default_title": "Babel",
     "default_popup": "popup.html"
   },
   "options_page": "options.html",
